@@ -1,10 +1,9 @@
 package actors
 
-import actors.Scheduler.{SchedulerCommands, StartScheduling, TimerKey, WrappedScrapeResponse}
-import actors.ScrapeResultProcessor.ProcessWebsiteResponse
-import actors.ScrapeWorker.{ScrapeResponse, ScrapeWebsite, ScrapeWebsiteResponse}
-import akka.actor.typed.{ActorRef, Behavior, SupervisorStrategy}
+import actors.Scheduler.{SchedulerCommands, StartScheduling, TimerKey}
+import actors.ScrapeWorker.ScrapeWebsite
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors, TimerScheduler}
+import akka.actor.typed.{Behavior, SupervisorStrategy}
 
 import scala.concurrent.duration.FiniteDuration
 
@@ -12,8 +11,7 @@ object Scheduler {
   private case object TimerKey
 
   sealed trait SchedulerCommands
-  case object StartScheduling                                extends SchedulerCommands
-  case class WrappedScrapeResponse(response: ScrapeResponse) extends SchedulerCommands
+  case object StartScheduling extends SchedulerCommands
 
   def apply(after: FiniteDuration): Behavior[SchedulerCommands] = {
     Behaviors
@@ -42,8 +40,6 @@ class Scheduler(
       name = "scrape-processor"
     )
 
-  val scraperResponseMapper: ActorRef[ScrapeResponse] = context.messageAdapter(WrappedScrapeResponse)
-
   private def idle(): Behavior[SchedulerCommands] =
     Behaviors.receiveMessage[SchedulerCommands] { _ =>
       timers.startTimerAtFixedRate(TimerKey, StartScheduling, after)
@@ -52,10 +48,8 @@ class Scheduler(
 
   def active: Behavior[SchedulerCommands] = Behaviors.receiveMessage {
     case Scheduler.StartScheduling =>
-      scraper ! ScrapeWebsite(scraperResponseMapper)
-      Behaviors.same
-    case WrappedScrapeResponse(response) =>
-      processor ! ProcessWebsiteResponse(response)
+      println("Scheduler starts working")
+      scraper ! ScrapeWebsite(processor)
       Behaviors.same
   }
 }

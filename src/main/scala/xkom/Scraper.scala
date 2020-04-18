@@ -12,12 +12,13 @@ class Scraper {
   def scrapeDailyDiscounts(): Item = {
     val doc = browser.get(Urls.mainPage)
 
-    val discountsBlock =
-      doc >> element("#hotShot") >> element(".product-impression")
-    val productId = discountsBlock attr "data-product-id"
-    val price     = BigDecimal(discountsBlock attr "data-product-price")
+    val hotShot        = doc >> element("#hotShot")
+    val discountsBlock = hotShot >> element(".product-impression")
+    val productId      = discountsBlock attr "data-product-id"
+    val price          = BigDecimal(discountsBlock attr "data-product-price")
+    val leftAmount     = hotShot >> element(".clearfix.count") >> element(".pull-left") >> element(".gs-quantity")
 
-    Item(productId, price)
+    Item(productId, price, leftAmount.text.toIntOption)
   }
 
   def scrapeProductPage(productId: String): ProductPage = {

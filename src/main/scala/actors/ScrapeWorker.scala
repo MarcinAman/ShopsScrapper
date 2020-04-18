@@ -19,7 +19,7 @@ object ScrapeWorker {
   final case class ScrapeDailyDeals(replyTo: ActorRef[ScrapeResponse])                        extends ScrapeCommands
   final case class ScrapeProductDetails(productId: String, replyTo: ActorRef[ScrapeResponse]) extends ScrapeCommands
 
-  sealed trait ScrapeResponse
+  trait ScrapeResponse
   final case class ScrapeWebsiteResponse(item: Item, productPage: ProductPage) extends ScrapeResponse
   final case class ScrapeDailyDealsResponse(item: Item)                        extends ScrapeResponse
   final case class ScrapeProductDetailsResponse(productPage: ProductPage)      extends ScrapeResponse
