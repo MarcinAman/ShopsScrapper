@@ -1,4 +1,4 @@
-### Shop scrapper
+# Shop scrapper
 A simple web scraper that periodically checks for daily deals on shops and sends the interesting ones to slack
 
 ## How it works
