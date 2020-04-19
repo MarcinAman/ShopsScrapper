@@ -15,7 +15,7 @@ object Main extends App {
 
   implicit val timeout: Timeout = 3.seconds
 
-  val system             = ActorSystem(Scheduler(5 seconds), "my-system")
+  val system             = ActorSystem(Scheduler(5 minutes), "my-system")
   val rootActor          = system
   implicit val scheduler = schedulerFromActorSystem(system)
   implicit val ec        = system.executionContext
