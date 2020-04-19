@@ -1,5 +1,6 @@
 package xkom
 
+import domain.Item
 import net.ruippeixotog.scalascraper.browser.JsoupBrowser
 import net.ruippeixotog.scalascraper.dsl.DSL._
 import net.ruippeixotog.scalascraper.dsl.DSL.Extract._
@@ -15,10 +16,10 @@ class Scraper {
     val hotShot        = doc >> element("#hotShot")
     val discountsBlock = hotShot >> element(".product-impression")
     val productId      = discountsBlock attr "data-product-id"
+    val name           = discountsBlock attr "data-product-name"
     val price          = BigDecimal(discountsBlock attr "data-product-price")
-    val leftAmount     = hotShot >> element(".clearfix.count") >> element(".pull-left") >> element(".gs-quantity")
 
-    Item(productId, price, leftAmount.text.toIntOption)
+    XKomItem(productId, name, price)
   }
 
   def scrapeProductPage(productId: String): ProductPage = {

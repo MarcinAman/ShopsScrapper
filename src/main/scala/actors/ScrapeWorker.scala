@@ -9,7 +9,8 @@ import actors.ScrapeWorker.{
   ScrapeProductDetailsResponse,
   ScrapeWebsiteResponse
 }
-import xkom.{Item, ProductPage, Scraper}
+import domain.Item
+import xkom.{ProductPage, Scraper}
 
 import scala.concurrent.duration._
 

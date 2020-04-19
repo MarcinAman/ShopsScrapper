@@ -1,12 +1,13 @@
 package slack
 
+import domain.Item
 import scalaj.http.{Http, HttpOptions}
-import xkom.Item
 
 class SlackRepository {
   val slackToken = "XD"
 
   def sendMessageToSlack(item: Item, toUsers: Set[String]) = {
+    println(s"sending message to slack for: ${toUsers}")
     toUsers.foreach(user => {
       Http(slackToken)
         .postData(
@@ -20,6 +21,6 @@ class SlackRepository {
   }
 
   private def message(item: Item, user: String) = {
-    s"@$user item ${item.id} is on sale for ${item.price}"
+    s"@$user item id=${item.id}, ${item.name} is on sale for ${item.price} in shop ${item.shop}"
   }
 }

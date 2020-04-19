@@ -2,7 +2,7 @@ import actors.Scheduler
 import actors.Scheduler.StartScheduling
 import akka.actor.typed.ActorSystem
 import infra.ItemRequestsRepository
-import xkom.Item
+import xkom.XKomItem
 
 import scala.concurrent.duration._
 import scala.io.StdIn
@@ -24,7 +24,7 @@ object Main extends App {
 
   for {
     _ <- requestsRepository.setup()
-    _ <- requestsRepository.save(Item("236497", 2136), "Marcin Aman")
+    _ <- requestsRepository.save(XKomItem("236497", "Sample item", 2136), "Marcin Aman")
   } yield rootActor.tell(StartScheduling)
 
   println("Press the any-key to terminate")
